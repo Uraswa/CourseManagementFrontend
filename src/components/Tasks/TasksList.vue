@@ -4,10 +4,14 @@
  import TaskStatusChanger from "components/Tasks/TaskStatusChanger.vue";
  import TaskCreateEdit from "components/Tasks/TaskCreateEdit.vue";
  import TaskDelete from "components/Tasks/TaskDelete.vue";
+ import TaskOutdatedExcelDownload from "components/Tasks/TaskOutdatedExcelDownload.vue";
+ import CourseTaskListDownloader from "components/Tasks/CourseTaskListDownloader.vue";
 
  export default {
    name: 'TasksList',
-   components: {TaskDelete, TaskCreateEdit, TaskStatusChanger, TaskComponent},
+   components: {
+     CourseTaskListDownloader,
+     TaskOutdatedExcelDownload, TaskDelete, TaskCreateEdit, TaskStatusChanger, TaskComponent},
    props: ["course_id"],
    data() {
      return {
@@ -136,6 +140,7 @@
               :course_id="course_id"
               @createTask="task => this.tasks.push(task)"
             />
+            <CourseTaskListDownloader v-if="!$store.state.is_admin" :tasks="tasks"/>
             <q-select v-model="filter_status" :options="status_options" label="Фильтр"></q-select>
             <q-select v-model="sorting.deadline" :options="sorting_deadline_options" label="Сортировка"></q-select>
           </q-card-section>
@@ -158,6 +163,10 @@
               @updateTask="updateTask"
             />
             <TaskDelete v-if="$store.state.is_admin" :task_id="task.task_id" @delete-task="removeTask(task.task_id)"/>
+
+          </template>
+          <template #outdated_actions>
+            <TaskOutdatedExcelDownload v-if="$store.state.is_admin" :task_id="task.task_id"/>
           </template>
         </TaskComponent>
       </template>

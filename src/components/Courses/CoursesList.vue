@@ -50,7 +50,7 @@
         </template>
       </CourseComponent>
     </template>
-    <div class="flex flex-center">
+    <div class="flex flex-center" v-else>
       Список ваших курсов пуст
     </div>
 
