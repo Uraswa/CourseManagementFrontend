@@ -10,6 +10,7 @@ export default {
     return {
       showCreateEditForm: false,
       showDeadlineDialog: false,
+      showLoading: false,
       name: "",
       text: "",
       deadline: new Date(),
@@ -35,6 +36,7 @@ export default {
       }
     },
     async submitForm(){
+      this.showLoading = true;
       let formData = {
 
       };
@@ -65,6 +67,7 @@ export default {
 
           this.$emit('updateTask', updateTask)
         }
+        this.showCreateEditForm = false;
       } else if (response.status === 200 && !response.data.success && response.data.error_field) {
          this.error_name = response.data.error_field === "name" ? response.data.error : "";
          this.error_text = response.data.error_field === "text" ? response.data.error : "";
@@ -73,6 +76,7 @@ export default {
       } else {
         alert(response.data.error)
       }
+      this.showLoading = false;
     }
   },
   watch: {
@@ -84,7 +88,7 @@ export default {
 </script>
 
 <template>
-  <q-btn @click="showCreateEditForm = true" :color="btn_color">{{btn_text}}</q-btn>
+  <q-btn @click="showCreateEditForm = true; showLoading = false" :color="btn_color">{{btn_text}}</q-btn>
   <q-dialog v-model="showCreateEditForm">
     <q-card style="min-width: 350px">
       <q-card-section>
@@ -129,7 +133,7 @@ export default {
           <p v-if="error_deadline" class="text-negative">{{error_deadline}}</p>
           <q-card-actions align="right" class="text-primary">
             <q-btn flat label="Отмена" v-close-popup />
-            <q-btn type="submit" flat label="Подтвердить" v-close-popup />
+            <q-btn type="submit" flat label="Подтвердить" :loading="showLoading" />
           </q-card-actions>
         </q-form>
 

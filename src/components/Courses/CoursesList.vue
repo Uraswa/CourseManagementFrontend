@@ -40,14 +40,20 @@
 
 <template>
   <div>
-    <CourseCreateEdit @createCourse="(course) => this.courses.push(course)" btn_color="primary" btn_text="Новый курс" action="create"/>
-    <CourseComponent :course="course" v-for="course in courses" :key="course.course_id">
-      <template #actions v-if="$store.state.is_admin">
-        <CourseCreateEdit @updateCourse="updateCourse" :init_course="course"  btn_color="warning" btn_text="Редактировать" action="update"/>
+    <CourseCreateEdit v-if="$store.state.is_admin" @createCourse="(course) => this.courses.push(course)" btn_color="primary" btn_text="Новый курс" action="create"/>
+    <template v-if="courses.length > 0">
+      <CourseComponent :course="course" v-for="course in courses" :key="course.course_id">
+        <template #actions v-if="$store.state.is_admin">
+          <CourseCreateEdit @updateCourse="updateCourse" :init_course="course"  btn_color="warning" btn_text="Редактировать" action="update"/>
 
-        <CourseDelete :course_id="course.course_id" @deleteCourse="deleteCourse"/>
-      </template>
-    </CourseComponent>
+          <CourseDelete :course_id="course.course_id" @deleteCourse="deleteCourse"/>
+        </template>
+      </CourseComponent>
+    </template>
+    <div class="flex flex-center">
+      Список ваших курсов пуст
+    </div>
+
   </div>
 </template>
 

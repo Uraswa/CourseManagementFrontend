@@ -124,16 +124,18 @@
 
 <template>
   <div>
-    <TaskCreateEdit
-      action="create"
-      btn_color="primary"
-      btn_text="Новое задание"
-      :course_id="course_id"
-      @createTask="task => this.tasks.push(task)"
-    />
+
       <div class="q-pa-md row items-start q-gutter-md">
         <q-card flat bordered style="width: 100%">
           <q-card-section>
+            <TaskCreateEdit
+              action="create"
+              btn_color="primary"
+              btn_text="Новое задание"
+              v-if="$store.state.is_admin"
+              :course_id="course_id"
+              @createTask="task => this.tasks.push(task)"
+            />
             <q-select v-model="filter_status" :options="status_options" label="Фильтр"></q-select>
             <q-select v-model="sorting.deadline" :options="sorting_deadline_options" label="Сортировка"></q-select>
           </q-card-section>
@@ -143,18 +145,19 @@
       <template v-if="filteredTasks.length !== 0">
         <TaskComponent :task="task" v-for="task in filteredTasks" :key="task.task_id">
           <template #task_actions>
-            <TaskStatusChanger :task_id="task.task_id" @status_changed="(status) => {
+            <TaskStatusChanger v-if="!$store.state.is_admin" :task_id="task.task_id" @status_changed="(status) => {
 
               changedStatus(task.task_id, status)
             }"/>
             <TaskCreateEdit
+              v-if="$store.state.is_admin"
               btn_text="Редактировать"
               btn_color="warning"
               :init_task="task"
               action="update"
               @updateTask="updateTask"
             />
-            <TaskDelete :task_id="task.task_id" @delete-task="removeTask(task.task_id)"/>
+            <TaskDelete v-if="$store.state.is_admin" :task_id="task.task_id" @delete-task="removeTask(task.task_id)"/>
           </template>
         </TaskComponent>
       </template>
