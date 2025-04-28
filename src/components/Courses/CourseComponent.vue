@@ -17,6 +17,7 @@
 
       <q-card-actions>
         <q-btn :to="'/course/'+course.course_id" flat color="primary" label="Перейти" />
+        <q-btn v-if="$store.state.is_admin" :to="'/courseMembers/'+course.course_id" flat color="primary" label="Участники" />
         <slot name="actions"></slot>
         <q-space />
       </q-card-actions>

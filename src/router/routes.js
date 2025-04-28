@@ -38,7 +38,7 @@ const routes = [
     children: [
       {
         name: "courseMembers",
-        path: '', component: () => import('pages/IndexPage.vue')
+        path: '', component: () => import('pages/CourseMembersPage.vue')
       }
     ]
   },
