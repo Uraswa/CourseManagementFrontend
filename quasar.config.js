@@ -12,7 +12,8 @@ export default defineConfig((/* ctx */) => {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      'axios'
+      'axios',
+      'vuex'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
@@ -41,7 +42,7 @@ export default defineConfig((/* ctx */) => {
         node: 'node20'
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -59,13 +60,10 @@ export default defineConfig((/* ctx */) => {
 
       // extendViteConf (viteConf) {},
       // viteVuePluginOptions: {},
-      
+
       vitePlugins: [
         ['vite-plugin-checker', {
-          eslint: {
-            lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{js,mjs,cjs,vue}"',
-            useFlatConfig: true
-          }
+
         }, { server: false }]
       ]
     },
@@ -73,7 +71,8 @@ export default defineConfig((/* ctx */) => {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
     devServer: {
       // https: true,
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically
+      port: 3000,
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework

@@ -1,117 +1,38 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
-      <router-view />
+      <div style="display: flex; flex-direction: row;">
+        <div  v-if="$store.state.user_id !== 0" style="min-height: 100vh; display: flex; align-items: flex-end" class="bg-blue">
+          <div style="position: sticky; bottom: 0; left: 0">
+            <q-btn @click="logout" round color="primary" icon="logout" />
+          </div>
+        </div>
+        <div style="width: 100%">
+          <router-view />
+        </div>
+      </div>
+
+
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+import Api from "src/helpers/Api.js";
 
-export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  data () {
-    return {
-      linksList,
-      leftDrawerOpen: false
-    }
-  },
-
+export default {
+  name: "MainLayout",
   methods: {
-    toggleLeftDrawer () {
-      this.leftDrawerOpen = !this.leftDrawerOpen
+    async logout(){
+      let response = await Api.post('/logout', {}, 8000);
+      if (response.status === 200){
+        this.$store.dispatch("setUserInfo", {user_id: 0});
+        localStorage.removeItem("token");
+        this.$router.push({ path: "/login" });
+      }
     }
   }
-})
+
+}
 </script>
