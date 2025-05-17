@@ -1,6 +1,6 @@
 ﻿import axios from "axios";
 
-let baseUrl = "http://localhost";
+let baseUrl = "http://87.228.89.138";
 
 const $api = axios.create({
   withCredentials: true,
@@ -25,7 +25,7 @@ $api.interceptors.response.use((config) => {
   if (error.response.status === 401 && error.config && !error.config._isRetry) {
     originalRequest._isRetry = true;
     try {
-      const response = await axios.post(`${baseUrl}:8000/refreshToken`, {}, {withCredentials: true})
+      const response = await axios.post(`${baseUrl}/api/lr4/refreshToken`, {}, {withCredentials: true})
       localStorage.setItem('token', response.data.accessToken);
       return $api.request(originalRequest);
     } catch (e) {
@@ -41,18 +41,14 @@ export default class Api {
   static async get(endPoint, port = 8000){
     //return await axios.get('http://localhost:8000/api/getChats?user_id=1&filters={%22search%22:%22%22}');
 
-    return await $api.get(endPoint, {
-      port: port
-    });
+    return await $api.get("/api/lr4" + endPoint);
 
   }
 
   static async post(endPoint, data, port = 8000){
     //return await axios.get('http://localhost:8000/api/getChats?user_id=1&filters={%22search%22:%22%22}');
 
-    return await $api.post(endPoint, data,{
-      port: port
-    });
+    return await $api.post("/api/lr4" + endPoint, data);
 
   }
 }

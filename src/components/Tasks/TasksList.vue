@@ -61,7 +61,7 @@
      }
    },
    async mounted() {
-     let response = await Api.get('getTasks?course_id='+this.course_id);
+     let response = await Api.get('/getTasks?course_id='+this.course_id);
      if (response.status === 200 && response.data.success) {
        this.tasks = response.data.data.tasks;
      }
